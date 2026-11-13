@@ -1,0 +1,11 @@
+node_modules/
+dist/
+dev-dist/
+build/
+.env
+.env.*
+*.env
+!.env.example
+!**/.env.example
+.DS_Store
+*.log
