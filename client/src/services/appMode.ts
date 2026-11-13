@@ -1,12 +1,12 @@
 /**
- * Vynora Application Mode Manager
- * Controls whether Vynora runs in:
- * 1. PRODUCTION MODE (VITE_APP_MODE=production): Real Firebase Auth, Firestore, Cloudinary.
- * 2. DEMO MODE (VITE_APP_MODE=demo): Isolated, fully-populated demo environment
- *    with zero external dependencies, realistic data, and full interactivity.
+ * Vynora Application Mode Manager — Dedicated Demo Mode
+ *
+ * Configured exclusively for Recruiter and Portfolio Demonstration.
+ * Runs completely in-browser with zero external dependencies, realistic
+ * sample datasets, and persistent local storage.
  */
 
-export type AppMode = 'demo' | 'production';
+export type AppMode = 'demo';
 
 // Safe fictional recruiter persona for Demo Mode
 export const DEMO_USER = {
@@ -21,63 +21,30 @@ export const DEMO_USER = {
   isDemoUser: true
 };
 
-const MODE_STORAGE_KEY = 'vynora_app_mode';
-
 /**
- * Determine the current application mode:
- * - Checks localStorage override first (allows on-the-fly recruiter toggling).
- * - Checks query parameter (?mode=demo or ?mode=production).
- * - Defaults to VITE_APP_MODE environment variable.
- * - If not configured, defaults safely to 'demo' to prevent unauthorized/broken startup.
+ * Permanently returns 'demo' mode
  */
 export function getAppMode(): AppMode {
-  // 1. Check URL search param override (e.g. for direct recruiter links)
-  if (typeof window !== 'undefined' && window.location) {
-    const params = new URLSearchParams(window.location.search);
-    const paramMode = params.get('mode')?.toLowerCase();
-    if (paramMode === 'production' || paramMode === 'demo') {
-      return paramMode as AppMode;
-    }
-  }
-
-  // 2. Check localStorage override
-  if (typeof localStorage !== 'undefined') {
-    const stored = localStorage.getItem(MODE_STORAGE_KEY);
-    if (stored === 'production' || stored === 'demo') {
-      return stored as AppMode;
-    }
-  }
-
-  // 3. Check Vite environment variable
-  const envMode = (import.meta.env.VITE_APP_MODE || '').toLowerCase().trim();
-  if (envMode === 'production') {
-    return 'production';
-  }
-
-  // Safe default: demo mode for instant recruiter review
   return 'demo';
 }
 
 /**
- * Set the application mode and trigger a reload if needed
+ * Application mode setter (no-op in demo-only build)
  */
-export function setAppMode(mode: AppMode) {
-  if (typeof localStorage !== 'undefined') {
-    localStorage.setItem(MODE_STORAGE_KEY, mode);
-  }
+export function setAppMode(_mode?: string) {
+  // Demo mode is permanent in this showcase repository
 }
 
 /**
- * Convenience helper to test if running in Demo Mode
+ * Always returns true: Demo Mode is active
  */
 export function isDemoMode(): boolean {
-  return getAppMode() === 'demo';
+  return true;
 }
 
 /**
- * Convenience helper to test if running in Production Mode
+ * Always returns false: Production mode is removed
  */
 export function isProductionMode(): boolean {
-  return getAppMode() === 'production';
+  return false;
 }
-

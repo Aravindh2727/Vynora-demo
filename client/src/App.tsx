@@ -101,24 +101,10 @@ export function AppContent() {
   };
 
   useEffect(() => {
-    if (isDemoMode()) {
-      setUser(DEMO_USER);
-      GlobalSearchService.prewarmUserDatasets(DEMO_USER.id);
-      setAuthLoading(false);
-      return;
-    }
-
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      if (firebaseUser && firebaseUser.emailVerified) {
-        setUser({ id: firebaseUser.uid, name: firebaseUser.displayName || 'User', email: firebaseUser.email || '' });
-        GlobalSearchService.prewarmUserDatasets(firebaseUser.uid);
-      } else {
-        queryCache.clearAll();
-        setUser(null);
-      }
-      setAuthLoading(false);
-    });
-    return () => unsubscribe();
+    // Dedicated Recruiter Demo Mode — Instant initialization with Alex Morgan persona
+    setUser(DEMO_USER);
+    GlobalSearchService.prewarmUserDatasets(DEMO_USER.id);
+    setAuthLoading(false);
   }, [setUser, setAuthLoading]);
 
   useEffect(() => {
@@ -155,12 +141,6 @@ export function AppContent() {
 
   const handleLogout = async () => {
     queryCache.clearAll();
-    if (isDemoMode()) {
-      navigate('/login');
-      return;
-    }
-    await auth.signOut();
-    setUser(null);
     navigate('/login');
   };
 

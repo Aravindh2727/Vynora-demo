@@ -29,19 +29,27 @@ Vynora is a comprehensive, production-grade life operating system designed to ce
 
 ---
 
-## 🚀 Two Application Modes
+## 🚀 Recruiter Demo Mode (Zero Dependencies)
 
-### 1. DEMO MODE (Default — Recruiter & Portfolio Showcase)
-*   **Instant Access:** Open the app and explore immediately without registration or login.
-*   **Preloaded Realistic Dataset:** 18 modules populated with coherent, realistic fictional records (Persona: *Alex Morgan*).
+This repository is configured as a **self-contained Recruiter & Portfolio Demonstration Showcase**:
+*   **Instant Access:** Open the app and explore immediately without registration, passwords, or login barriers.
+*   **Preloaded Realistic Dataset:** All 18 modules are populated with coherent, realistic records under the executive persona (*Alex Morgan*).
 *   **In-Browser Persistence:** Changes (additions, edits, deletions) persist in your browser via `localStorage`.
 *   **Reset Demo Data:** Click "Reset Demo Data" in the top banner anytime to restore pristine initial records.
-*   **Zero Cloud Dependencies:** No Firebase API keys or Cloudinary secrets needed to run or evaluate the demo.
+*   **Zero Cloud Dependencies:** No Firebase API keys, no backend servers, and no Cloudinary secrets needed to run, deploy, or evaluate.
 
-### 2. PRODUCTION MODE
-*   **Firebase Authentication:** Email/password and Google OAuth with verified session handling.
-*   **Cloud Firestore:** Direct multi-tab persistent cloud database.
-*   **Cloudinary:** Direct unsigned client-side file and document uploads.
+---
+
+## ☁️ 1-Click Deploy to Render (Static Site)
+
+Deploy this project on [Render](https://render.com) in 2 minutes:
+
+1. Click **New +** → **Blueprint** on Render.
+2. Select repository `Aravindh2727/Vynora-demo`.
+3. Render will read `render.yaml` and provision the frontend static site with SPA routing rewrites automatically.
+4. Your live demo URL will be available immediately!
+
+*(Alternatively, create a **Static Site** manually: Root Directory: `client`, Build Command: `npm install && npm run build`, Publish Directory: `dist`, Rewrite Rule: `/*` -> `/index.html`)*
 
 ---
 

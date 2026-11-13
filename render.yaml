@@ -1,26 +1,10 @@
 services:
   # -------------------------------------------------------------
-  # Backend Express Server
+  # Vynora Recruiter Demo Showcase (Vite React SPA Static Site)
+  # 1-Click Zero-Dependency Deployment
   # -------------------------------------------------------------
   - type: web
-    name: vynora-server
-    runtime: node
-    plan: free
-    rootDir: server
-    buildCommand: npm install
-    startCommand: npm start
-    healthCheckPath: /api/health
-    envVars:
-      - key: PORT
-        value: 5000
-      - key: OPENROUTER_API_KEY
-        sync: false
-
-  # -------------------------------------------------------------
-  # Frontend Vite React SPA (Static Site)
-  # -------------------------------------------------------------
-  - type: web
-    name: vynora-client
+    name: vynora-demo
     runtime: static
     plan: free
     rootDir: client
@@ -31,10 +15,5 @@ services:
         source: /*
         destination: /index.html
     envVars:
-      - key: VITE_API_URL
-        fromService:
-          type: web
-          name: vynora-server
-          property: host
       - key: VITE_APP_MODE
         value: demo

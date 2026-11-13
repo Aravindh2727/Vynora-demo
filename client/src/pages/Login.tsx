@@ -1,213 +1,146 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import * as z from 'zod';
-import { motion } from 'framer-motion';
-import { Sparkles, Mail, Lock, LogIn } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
-import { signInWithPopup, getAdditionalUserInfo, signInWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { auth, googleProvider } from '../firebase';
-import { isDemoMode, setAppMode, DEMO_USER } from '../services/appMode';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Sparkles, ArrowRight, RotateCcw, CheckCircle2, ShieldCheck, Layers, Cpu, Database } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { DEMO_USER } from '../services/appMode';
+import { DemoStorage } from '../services/demo/demoStorage';
 import { GlobalSearchService } from '../services/firestoreService';
-
 import { useContextEngineStore } from '../store/useContextEngineStore';
-
-const loginSchema = z.object({
-  email: z.string().email({ message: "Invalid email address" }),
-  password: z.string().min(6, { message: "Password must be at least 6 characters" })
-});
-
-type LoginFormValues = z.infer<typeof loginSchema>;
 
 export default function Login() {
   const navigate = useNavigate();
   const { setUser } = useContextEngineStore();
-  const [authError, setAuthError] = React.useState<string | null>(null);
-  const [unverifiedUser, setUnverifiedUser] = React.useState<any>(null);
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<LoginFormValues>({
-    resolver: zodResolver(loginSchema)
-  });
+  const [resetSuccess, setResetSuccess] = useState(false);
 
-  const onSubmit = async (data: LoginFormValues) => {
-    try {
-      setAuthError(null);
-      setUnverifiedUser(null);
-      
-      const userCredential = await signInWithEmailAndPassword(auth, data.email, data.password);
-      const user = userCredential.user;
-
-      if (!user.emailVerified) {
-        setUnverifiedUser(user);
-        setAuthError("Please verify your email address before signing in. Check your inbox or spam folder for the verification link.");
-        return;
-      }
-
-      setUser({ id: user.uid, name: user.displayName || 'User', email: user.email || '' });
-      navigate('/');
-    } catch (error: any) {
-      console.error("Login Error:", error);
-      setAuthError("Invalid email or password.");
-    }
-  };
-
-  const handleResend = async () => {
-    if (unverifiedUser) {
-      try {
-        await sendEmailVerification(unverifiedUser);
-        alert("Verification link resent! Please check your inbox.");
-      } catch (e: any) {
-        alert("Error resending link. Please try again later.");
-      }
-    }
-  };
-
-  const [googleLoading, setGoogleLoading] = React.useState(false);
-
-  const handleGoogleSignIn = async () => {
-    if (googleLoading) return;
-    setGoogleLoading(true);
-    setAuthError(null);
-
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      setUser({ id: user.uid, name: user.displayName || 'Google User', email: user.email || '' });
-      navigate('/');
-    } catch (error: any) {
-      if (error.code === 'auth/popup-closed-by-user' || error.code === 'auth/cancelled-popup-request') {
-        return; // User intentionally closed popup, no error needed
-      }
-      console.error("Google Sign-In Error:", error);
-      setAuthError(error.message || "Failed to sign in with Google.");
-    } finally {
-      setGoogleLoading(false);
-    }
-  };
-
-  const handleExploreDemo = () => {
-    setAppMode('demo');
+  const handleEnterDemo = () => {
     setUser(DEMO_USER);
     GlobalSearchService.prewarmUserDatasets(DEMO_USER.id);
     navigate('/');
   };
 
+  const handleResetAndEnter = () => {
+    DemoStorage.resetStore();
+    setUser(DEMO_USER);
+    GlobalSearchService.prewarmUserDatasets(DEMO_USER.id);
+    setResetSuccess(true);
+    setTimeout(() => {
+      navigate('/');
+    }, 600);
+  };
+
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4 relative overflow-hidden text-textMain font-sans">
-      {/* Background glowing orbs */}
-      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-primary/20 rounded-full blur-[100px]"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-accent/20 rounded-full blur-[100px]"></div>
+      {/* Background ambient lighting */}
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-primary/20 rounded-full blur-[120px] pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-accent/20 rounded-full blur-[120px] pointer-events-none"></div>
 
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md glass-panel p-8 relative z-10"
+        transition={{ duration: 0.4 }}
+        className="w-full max-w-lg glass-panel p-8 relative z-10 border border-glass shadow-neon-primary rounded-3xl"
       >
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-20 h-20 rounded-full shadow-neon-primary mb-4 overflow-hidden flex items-center justify-center border border-primary/40 bg-surface">
+        {/* App Branding */}
+        <div className="flex flex-col items-center mb-6 text-center">
+          <div className="w-20 h-20 rounded-full shadow-neon-primary mb-4 overflow-hidden flex items-center justify-center border-2 border-primary/40 bg-surface">
             <img src="/vynora_icon_circle.png" alt="Vynora Logo" className="w-full h-full object-cover" />
           </div>
-          <h1 className="text-3xl font-bold tracking-wider mb-2">Vynora</h1>
-          <p className="text-textMuted text-center text-sm">Your Life • Organized • Smarter</p>
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/20 text-primary text-xs font-bold uppercase tracking-wider mb-2 border border-primary/30">
+            <Sparkles size={13} className="animate-pulse" />
+            <span>Recruiter & Technical Showcase</span>
+          </div>
+          <h1 className="text-3xl font-extrabold tracking-tight mb-1 text-textMain">Vynora</h1>
+          <p className="text-textMuted text-sm">Smart AI Life Operating System • 18 Unified Domains</p>
         </div>
 
-        {authError && (
-          <div className="bg-red-500/10 border border-red-500/50 text-red-500 text-sm p-3 rounded-xl mb-6 text-center">
-            <p>{authError}</p>
-            {unverifiedUser && (
-              <button 
-                type="button"
-                onClick={handleResend} 
-                className="mt-3 bg-surface border border-red-500/50 text-red-400 hover:text-red-300 hover:bg-surfaceLight px-4 py-2 rounded-lg transition-colors text-xs font-semibold uppercase tracking-wider"
-              >
-                Resend Verification Link
-              </button>
-            )}
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-          <div>
-            <label className="block text-sm text-textMuted mb-1">Email</label>
-            <div className="relative">
-              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-              <input 
-                type="email" 
-                {...register('email')}
-                className="w-full bg-surface border border-glass rounded-xl py-3 pl-10 pr-4 text-textMain outline-none focus:border-primary transition-colors"
-                placeholder="name@example.com"
-              />
+        {/* Recruiter Persona Card */}
+        <div className="p-4 rounded-2xl bg-surface/80 border border-glass mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-xl bg-primary/10 border border-primary/30 flex items-center justify-center shrink-0">
+              <img src={DEMO_USER.avatarUrl} alt="Persona" className="w-10 h-10 rounded-lg object-cover" />
             </div>
-            {errors.email && <p className="text-red-400 text-xs mt-1">{errors.email.message}</p>}
-          </div>
-
-          <div>
-            <div className="flex justify-between items-center mb-1">
-              <label className="block text-sm text-textMuted">Password</label>
-              <Link to="/forgot-password" className="text-xs text-primary hover:underline">Forgot password?</Link>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-sm text-textMain truncate">{DEMO_USER.name}</span>
+                <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                  Ready to Explore
+                </span>
+              </div>
+              <p className="text-xs text-textMuted truncate">{DEMO_USER.role} • {DEMO_USER.location}</p>
             </div>
-            <div className="relative">
-              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500" size={18} />
-              <input 
-                type="password" 
-                {...register('password')}
-                className="w-full bg-surface border border-glass rounded-xl py-3 pl-10 pr-4 text-textMain outline-none focus:border-primary transition-colors"
-                placeholder="••••••••"
-              />
-            </div>
-            {errors.password && <p className="text-red-400 text-xs mt-1">{errors.password.message}</p>}
           </div>
+        </div>
 
+        {/* Feature Grid Summary */}
+        <div className="grid grid-cols-2 gap-2.5 mb-6 text-xs">
+          <div className="p-3 rounded-xl bg-surface border border-glass flex items-start gap-2">
+            <Layers size={16} className="text-primary shrink-0 mt-0.5" />
+            <div>
+              <span className="font-semibold text-textMain block">18 Modules</span>
+              <span className="text-textMuted text-[11px]">Finance, Agri, Dairy, Health, Vault & more</span>
+            </div>
+          </div>
+          <div className="p-3 rounded-xl bg-surface border border-glass flex items-start gap-2">
+            <Database size={16} className="text-accent shrink-0 mt-0.5" />
+            <div>
+              <span className="font-semibold text-textMain block">Local Persistence</span>
+              <span className="text-textMuted text-[11px]">Full CRUD, search & browser persistence</span>
+            </div>
+          </div>
+          <div className="p-3 rounded-xl bg-surface border border-glass flex items-start gap-2">
+            <Cpu size={16} className="text-amber-400 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-semibold text-textMain block">Real Calculations</span>
+              <span className="text-textMuted text-[11px]">Banking EMI, crop ROI, cattle yields</span>
+            </div>
+          </div>
+          <div className="p-3 rounded-xl bg-surface border border-glass flex items-start gap-2">
+            <ShieldCheck size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-semibold text-textMain block">Zero Friction</span>
+              <span className="text-textMuted text-[11px]">No login, passwords, or setup needed</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Notification Toast */}
+        <AnimatePresence>
+          {resetSuccess && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="mb-4 p-3 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2"
+            >
+              <CheckCircle2 size={16} />
+              <span>Sample data reset to original demonstration state! Launching...</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Actions */}
+        <div className="space-y-3">
           <button 
-            type="submit" 
-            disabled={isSubmitting}
-            className="w-full bg-primary text-background font-semibold py-3 rounded-xl hover:bg-primary/90 transition-all shadow-neon-primary flex items-center justify-center gap-2"
+            type="button" 
+            onClick={handleEnterDemo}
+            className="w-full bg-gradient-to-r from-primary to-accent text-background font-bold py-3.5 px-6 rounded-2xl shadow-neon-primary hover:opacity-95 transition-all active:scale-98 flex items-center justify-center gap-2 text-sm tracking-wide"
           >
-            {isSubmitting ? <span className="animate-spin border-2 border-background border-t-transparent rounded-full w-5 h-5"></span> : <><LogIn size={18} /> Sign In</>}
+            <span>Enter Demo Workspace</span>
+            <ArrowRight size={18} />
           </button>
-        </form>
 
-        <div className="mt-6 flex items-center justify-between text-sm text-textMuted">
-          <span className="w-1/3 border-b border-glass"></span>
-          <span>OR</span>
-          <span className="w-1/3 border-b border-glass"></span>
-        </div>
-
-        <button 
-          onClick={handleGoogleSignIn} 
-          type="button" 
-          disabled={googleLoading}
-          className="w-full mt-6 bg-surface border border-glass py-3 rounded-xl hover:bg-surfaceLight transition-colors flex items-center justify-center gap-3 disabled:opacity-50"
-        >
-          <svg className="w-5 h-5" viewBox="0 0 24 24">
-            <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-          </svg>
-          {googleLoading ? "Signing in..." : "Sign in with Google"}
-        </button>
-
-        {/* Recruiter / Guest Demo Showcase Instant Access */}
-        <div className="mt-6 p-4 rounded-2xl bg-gradient-to-r from-primary/10 via-surface to-accent/10 border border-primary/30 text-center">
-          <div className="flex items-center justify-center gap-1.5 text-xs text-primary font-bold uppercase tracking-wider mb-1">
-            <Sparkles size={14} className="animate-pulse" />
-            <span>Recruiter & Technical Review</span>
-          </div>
-          <p className="text-xs text-textMuted mb-3">
-            Explore all 18 modules with realistic preloaded data — no registration or login required.
-          </p>
           <button
             type="button"
-            onClick={handleExploreDemo}
-            className="w-full bg-gradient-to-r from-primary to-accent text-background font-bold py-2.5 px-4 rounded-xl shadow-neon-primary hover:opacity-95 transition-all active:scale-95 flex items-center justify-center gap-2 text-sm"
+            onClick={handleResetAndEnter}
+            className="w-full bg-surface border border-glass hover:bg-surfaceLight text-textMuted hover:text-textMain py-2.5 px-4 rounded-xl transition-colors text-xs font-medium flex items-center justify-center gap-2 active:scale-98"
           >
-            <Sparkles size={16} />
-            <span>Explore Demo Mode</span>
+            <RotateCcw size={14} className="text-amber-400" />
+            <span>Reset Demo Data & Enter</span>
           </button>
         </div>
 
-        <p className="mt-8 text-center text-sm text-textMuted">
-          Don't have an account? <Link to="/register" className="text-primary hover:underline">Create one</Link>
+        <p className="mt-6 text-center text-xs text-textMuted">
+          Built with React 19, TypeScript, and Tailwind CSS. All changes persist locally in your browser.
         </p>
       </motion.div>
     </div>

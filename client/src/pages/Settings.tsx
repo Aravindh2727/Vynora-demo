@@ -5,10 +5,9 @@ import {
   Smartphone, Monitor, Mail, Lock, Trash2, Download,
   Save, Camera, CheckCircle2, AlertTriangle, X, Check, Globe, Sparkles
 } from 'lucide-react';
-import { updateProfile, updatePassword, sendPasswordResetEmail, signOut, deleteUser } from 'firebase/auth';
-import { auth } from '../firebase';
 import { useContextEngineStore } from '../store/useContextEngineStore';
 import { UserService, getActiveUserId } from '../services/firestoreService';
+import { DemoStorage } from '../services/demo/demoStorage';
 import { subscribeToPush } from '../utils/push';
 import { MobilePageHeader } from '../components/common/MobilePageHeader';
 import { ConfirmModal } from '../components/common/ConfirmModal';
@@ -116,11 +115,11 @@ export default function Settings() {
     setStatusMessage(null);
 
     try {
-      // 1. Update Firebase Auth displayName if currentUser exists
-      if (auth.currentUser && fullName) {
-        await updateProfile(auth.currentUser, {
-          displayName: fullName,
-          photoURL: avatarUrl || undefined
+      // 1. Update store
+      if (fullName && user && setUser) {
+        setUser({
+          ...user,
+          name: fullName
         });
       }
 
@@ -178,36 +177,13 @@ export default function Settings() {
 
     setPasswordLoading(true);
     try {
-      if (auth.currentUser) {
-        await updatePassword(auth.currentUser, newPassword);
-        setPasswordSuccess('Password updated successfully!');
-        setNewPassword('');
-        setConfirmPassword('');
-        setTimeout(() => setShowPasswordModal(false), 2000);
-      } else {
-        // Fallback: send password reset email
-        const targetEmail = user?.email;
-        if (targetEmail) {
-          await sendPasswordResetEmail(auth, targetEmail);
-          setPasswordSuccess(`Password reset email sent to ${targetEmail}`);
-          setTimeout(() => setShowPasswordModal(false), 2500);
-        } else {
-          setPasswordError('No active user email found.');
-        }
-      }
+      // In Demo Mode, simulate password update safely
+      setPasswordSuccess('Password simulated and updated successfully for Demo Persona!');
+      setNewPassword('');
+      setConfirmPassword('');
+      setTimeout(() => setShowPasswordModal(false), 1500);
     } catch (err: any) {
-      console.error('Password change error:', err);
-      if (err.code === 'auth/requires-recent-login') {
-        // Send reset email instead
-        if (user?.email) {
-          await sendPasswordResetEmail(auth, user.email);
-          setPasswordSuccess(`Security timeout: A password reset link has been emailed to ${user.email}`);
-        } else {
-          setPasswordError('Please log out and log in again before changing password.');
-        }
-      } else {
-        setPasswordError(err.message || 'Failed to update password');
-      }
+      setPasswordError(err.message || 'Failed to update password');
     } finally {
       setPasswordLoading(false);
     }
@@ -233,22 +209,16 @@ export default function Settings() {
     }
   };
 
-  // Delete Account Handler
+  // Delete Account Handler (Resets Demo Data in Demo Mode)
   const handleDeleteAccount = async () => {
     setDeletingAccount(true);
     try {
       await UserService.deleteUserData(activeUid);
-      if (auth.currentUser) {
-        try {
-          await deleteUser(auth.currentUser);
-        } catch {
-          await signOut(auth);
-        }
-      }
+      DemoStorage.resetStore();
       window.location.href = '/login';
     } catch (err: any) {
       console.error('Delete account error:', err);
-      alert('Error deleting account: ' + (err.message || 'Please try again.'));
+      alert('Error resetting data: ' + (err.message || 'Please try again.'));
     } finally {
       setDeletingAccount(false);
       setShowDeleteModal(false);

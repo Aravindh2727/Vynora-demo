@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, RotateCcw, ShieldCheck, Info, X, CheckCircle2, Database, Layers } from 'lucide-react';
+import { Sparkles, RotateCcw, ShieldCheck, Info, X, CheckCircle2, Layers } from 'lucide-react';
 import { DemoStorage } from '../../services/demo/demoStorage';
-import { isDemoMode, setAppMode, DEMO_USER } from '../../services/appMode';
+import { isDemoMode, DEMO_USER } from '../../services/appMode';
 import { ConfirmModal } from './ConfirmModal';
 
 interface DemoModeBannerProps {
@@ -29,11 +29,6 @@ export const DemoModeBanner: React.FC<DemoModeBannerProps> = ({ onDataReset }) =
       setResetSuccessToast(false);
       window.location.reload();
     }, 900);
-  };
-
-  const handleSwitchToProduction = () => {
-    setAppMode('production');
-    window.location.href = '/login';
   };
 
   return (
@@ -73,16 +68,6 @@ export const DemoModeBanner: React.FC<DemoModeBannerProps> = ({ onDataReset }) =
           >
             <RotateCcw size={12} className="text-amber-400" />
             <span>Reset Demo Data</span>
-          </button>
-
-          {/* Switch to Production Link */}
-          <button
-            onClick={handleSwitchToProduction}
-            className="hidden xl:flex items-center gap-1 px-2.5 py-1 rounded-lg bg-surface hover:bg-surfaceLight text-textMuted hover:text-textMain border border-glass transition-colors text-[11px]"
-            title="Switch back to Firebase Production Mode"
-          >
-            <Database size={12} />
-            <span>Switch to Production</span>
           </button>
         </div>
       </div>
@@ -159,21 +144,21 @@ export const DemoModeBanner: React.FC<DemoModeBannerProps> = ({ onDataReset }) =
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
                   <div className="p-3 rounded-xl bg-surface border border-glass">
-                    <div className="font-semibold text-textMain mb-1">Production Mode</div>
+                    <div className="font-semibold text-textMain mb-1">Architecture Highlights</div>
                     <ul className="list-disc list-inside space-y-1 text-[11px]">
-                      <li>Firebase Authentication (`auth.uid`)</li>
-                      <li>Firestore multi-tab persistence</li>
-                      <li>Cloudinary unsigned file uploads</li>
-                      <li>Monotonic security rules enforced</li>
+                      <li>React 19 + TypeScript + Tailwind CSS</li>
+                      <li>Zero external credentials required</li>
+                      <li>In-browser transactional adapter layer</li>
+                      <li>PBKDF2 + AES-GCM client vault encryption</li>
                     </ul>
                   </div>
 
                   <div className="p-3 rounded-xl bg-surface border border-glass">
-                    <div className="font-semibold text-textMain mb-1">Demo Mode</div>
+                    <div className="font-semibold text-textMain mb-1">Interactive Features</div>
                     <ul className="list-disc list-inside space-y-1 text-[11px]">
-                      <li>Preloaded realistic fictional dataset</li>
-                      <li>18 modules fully accessible without login</li>
-                      <li>Local storage persistence across refreshes</li>
+                      <li>18 modules with realistic seed datasets</li>
+                      <li>Full CRUD, filtering, search & analytics</li>
+                      <li>State persistence across page refreshes</li>
                       <li>Instant one-click demo data reset</li>
                     </ul>
                   </div>
