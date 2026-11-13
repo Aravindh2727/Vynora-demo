@@ -36,3 +36,5 @@ services:
           type: web
           name: vynora-server
           property: host
+      - key: VITE_APP_MODE
+        value: demo
