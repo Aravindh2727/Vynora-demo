@@ -11,7 +11,6 @@ import { useContextEngineStore } from '../store/useContextEngineStore';
 import { useNavigate } from 'react-router-dom';
 import { DashboardService, FinanceService, getActiveUserId } from '../services/firestoreService';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
-import { isDemoMode } from '../services/appMode';
 
 const Widget = ({ title, icon, value, subtext, color = "text-primary", onClick }: any) => (
   <motion.button
@@ -281,32 +280,6 @@ export default function Dashboard() {
           <span>{refreshing ? 'Refreshing...' : 'Refresh'}</span>
         </button>
       </div>
-
-      {/* Recruiter / Technical Interviewer Welcome Card (Demo Mode Only) */}
-      {isDemoMode() && (
-        <motion.div
-          initial={{ opacity: 0, y: 5 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="p-4 sm:p-5 rounded-2xl glass-panel border border-primary/30 bg-gradient-to-r from-primary/10 via-surface to-accent/10 relative overflow-hidden"
-        >
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
-            <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <span className="px-2 py-0.5 rounded-full bg-primary/20 text-primary text-[10px] font-bold tracking-wider uppercase border border-primary/30">
-                  Interactive Recruiter Showcase
-                </span>
-                <span className="text-xs text-textMuted hidden sm:inline">• React 19 + TypeScript + Clean Architecture</span>
-              </div>
-              <h2 className="text-base sm:text-lg font-bold text-textMain">
-                Welcome to Vynora — Smart Life Operating System
-              </h2>
-              <p className="text-xs text-textMuted max-w-2xl leading-relaxed">
-                Explore a fully populated ecosystem across all 18 modules with realistic datasets and live calculations. Feel free to create new records, edit existing ones, toggle installments, check mileage logs, or run reports. All changes persist in your browser and can be reset anytime using &quot;Reset Demo Data&quot;.
-              </p>
-            </div>
-          </div>
-        </motion.div>
-      )}
 
       {/* Summary Cards: Clean, responsive, comfortable sizing */}
       <div>

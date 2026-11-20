@@ -41,7 +41,6 @@ import { GlobalSearchModal } from './components/common/GlobalSearchModal';
 import { GlobalSearchService } from './services/firestoreService';
 import LoaderPreview from './pages/LoaderPreview';
 import { isDemoMode, DEMO_USER } from './services/appMode';
-import { DemoModeBanner } from './components/common/DemoModeBanner';
 
 export function AppContent() {
   const navigate = useNavigate();
@@ -176,7 +175,6 @@ export function AppContent() {
 
   return (
     <div className="flex flex-col h-screen bg-background overflow-hidden font-sans text-textMain">
-      <DemoModeBanner />
       <div className="flex flex-1 overflow-hidden relative">
         {/* 
           DESKTOP SIDEBAR ONLY (hidden on mobile, preserving full desktop navigation)

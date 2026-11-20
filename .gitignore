@@ -1,5 +1,6 @@
 node_modules/
 **/node_modules/
+Professional_Presentation/package*.json
 dist/
 dev-dist/
 build/
