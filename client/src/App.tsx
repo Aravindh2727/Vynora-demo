@@ -49,7 +49,7 @@ export function AppContent() {
   const [cmdMenuOpen, setCmdMenuOpen] = useState(false);
   const [isPinned, setIsPinned] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState(() => localStorage.getItem('theme') || 'dark');
+  const [currentTheme, setCurrentTheme] = useState(() => localStorage.getItem('theme') || 'light');
   const [initialSplashDone, setInitialSplashDone] = useState(false);
   const { dispatchIntent, aiStatus, user, setUser, setAuthLoading, authLoading } = useContextEngineStore();
 
@@ -64,18 +64,15 @@ export function AppContent() {
   const isDesktopSidebarOpen = isPinned || isHovered;
   const isDashboard = location.pathname === '/';
 
-  // Global Theme Initialization
+  // Global Theme Initialization (Defaults to Light Theme)
   useEffect(() => {
-    const theme = localStorage.getItem('theme') || 'dark';
-    const accentColor = localStorage.getItem('accentColor') || '#00f2fe';
+    const theme = localStorage.getItem('theme') || 'light';
+    const accentColor = localStorage.getItem('accentColor') || '#0284c7';
     const root = window.document.documentElement;
     
-    root.classList.remove('light');
-    if (theme === 'system') {
-      if (window.matchMedia('(prefers-color-scheme: dark)').matches === false) {
-        root.classList.add('light');
-      }
-    } else if (theme === 'light') {
+    if (theme === 'dark') {
+      root.classList.remove('light');
+    } else {
       root.classList.add('light');
     }
 

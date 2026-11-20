@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vynora — Smart AI Life Operating System | Project Presentation</title>
+  <link rel="icon" type="image/png" href="assets/vynora_logo.png">
+  <style>
+    :root {
+      /* Default Executive Light Theme */
+      --bg: #F8FAFC;
+      --card: #FFFFFF;
+      --card-light: #F1F5F9;
+      --primary: #0284C7;
+      --secondary: #0EA5E9;
+      --accent: #059669;
+      --warning: #D97706;
+      --text: #0F172A;
+      --muted: #475569;
+      --border: #E2E8F0;
+      --glow: rgba(2, 132, 199, 0.15);
+      --shadow: 0 12px 30px -6px rgba(0, 0, 0, 0.08), 0 8px 12px -4px rgba(0, 0, 0, 0.04);
+      --header-bg: rgba(255, 255, 255, 0.95);
+      --chip-bg: #F1F5F9;
+    }
+
+    body.dark {
+      /* Dark Theme Alternative */
+      --bg: #0B0F19;
+      --card: #161F30;
+      --card-light: #1E293B;
+      --primary: #00F2FE;
+      --secondary: #38BDF8;
+      --accent: #10B981;
+      --warning: #F59E0B;
+      --text: #F8FAFC;
+      --muted: #94A3B8;
+      --border: #253349;
+      --glow: rgba(0, 242, 254, 0.2);
+      --shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 242, 254, 0.08);
+      --header-bg: rgba(11, 15, 25, 0.95);
+      --chip-bg: #0B0F19;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      transition: background-color 0.25s ease, color 0.25s ease;
+    }
+
+    /* Top Navigation Bar */
+    header {
+      background: var(--header-bg);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 12px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      transition: background 0.25s ease, border-color 0.25s ease;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand img {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      border: 1.5px solid var(--primary);
+      box-shadow: 0 0 10px var(--glow);
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--text);
+    }
+
+    .brand-tag {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--primary);
+      background: rgba(2, 132, 199, 0.1);
+      border: 1px solid rgba(2, 132, 199, 0.3);
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-left: 8px;
+    }
+
+    .nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: var(--card-light);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #0284C7 0%, #0369A1 100%);
+      color: #FFFFFF;
+      border: none;
+      box-shadow: 0 4px 14px var(--glow);
+    }
+
+    body.dark .btn-primary {
+      background: linear-gradient(135deg, #00F2FE 0%, #0284C7 100%);
+      color: #0B0F19;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.95;
+      transform: translateY(-1px);
+      color: #FFFFFF;
+    }
+
+    body.dark .btn-primary:hover {
+      color: #0B0F19;
+    }
+
+    .slide-counter {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 8px 14px;
+      border-radius: 8px;
+      min-width: 80px;
+      text-align: center;
+    }
+
+    /* Main Presentation Stage */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .slide-viewport {
+      width: 100%;
+      max-width: 1140px;
+      aspect-ratio: 16 / 9;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .slide {
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 40px 50px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      flex-direction: column;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Slide Header */
+    .slide-category {
+      font-size: 11.5px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--primary);
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .slide-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 6px;
+    }
+
+    .slide-subtitle {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-bottom: 18px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Slide Content Layouts */
+    .slide-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      height: 100%;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 16px;
+      height: 100%;
+    }
+
+    .card {
+      background: var(--card-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    .card.accent-cyan { border-left: 4px solid var(--primary); }
+    .card.accent-emerald { border-left: 4px solid var(--accent); }
+    .card.accent-amber { border-left: 4px solid var(--warning); }
+    .card.accent-sky { border-left: 4px solid var(--secondary); }
+
+    .card-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-desc {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .bullet-list {
+      list-style: none;
+      padding: 0;
+      margin-top: 6px;
+    }
+
+    .bullet-list li {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.5;
+      position: relative;
+      padding-left: 14px;
+      margin-bottom: 4px;
+    }
+
+    .bullet-list li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+    }
+
+    /* Title Slide Specifics */
+    .title-slide-container {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: radial-gradient(circle at center, rgba(2, 132, 199, 0.05) 0%, transparent 70%);
+    }
+
+    body.dark .title-slide-container {
+      background: radial-gradient(circle at center, rgba(0, 242, 254, 0.08) 0%, transparent 70%);
+    }
+
+    .title-logo {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      border: 2px solid var(--primary);
+      box-shadow: 0 0 24px var(--glow);
+      margin-bottom: 16px;
+    }
+
+    .title-badge {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--primary);
+      background: rgba(2, 132, 199, 0.1);
+      border: 1px solid rgba(2, 132, 199, 0.35);
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+
+    .main-title {
+      font-size: 52px;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: 1px;
+      margin-bottom: 8px;
+    }
+
+    .main-tagline {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--secondary);
+      margin-bottom: 24px;
+    }
+
+    .chips-row {
+      display: flex;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .chip {
+      background: var(--chip-bg);
+      border: 1px solid var(--border);
+      padding: 10px 18px;
+      border-radius: 10px;
+    }
+
+    .chip-num {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .chip-label {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .author-info {
+      font-size: 12px;
+      color: var(--muted);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+
+    /* Screenshot Cards */
+    .screenshot-card {
+      background: var(--card-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    body.dark .screenshot-card {
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .screenshot-img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--border);
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+
+    .screenshot-img:hover {
+      transform: scale(1.02);
+    }
+
+    .screenshot-meta {
+      padding: 14px 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .screenshot-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .screenshot-desc {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* Workflow Pipeline */
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      height: 100%;
+    }
+
+    .step-card {
+      background: var(--card-light);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 18px 14px;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .step-tag {
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      align-self: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .step-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .step-desc {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* Slide Footer */
+    .slide-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px solid var(--border);
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: auto;
+    }
+
+    /* Bottom Quick Nav Indicator */
+    .indicator-bar {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      padding: 14px 0 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .dot.active {
+      background: var(--primary);
+      box-shadow: 0 0 8px var(--glow);
+      width: 24px;
+      border-radius: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 900px) {
+      .slide { padding: 24px; }
+      .main-title { font-size: 36px; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .pipeline { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation Bar -->
+  <header>
+    <div class="brand">
+      <img src="assets/vynora_logo.png" alt="Vynora Logo">
+      <span class="brand-title">Vynora</span>
+      <span class="brand-tag">Presentation Preview</span>
+    </div>
+
+    <div class="nav-controls">
+      <button class="btn" id="themeBtn" title="Toggle Light / Dark Mode">☀️ Light Theme</button>
+      <button class="btn" id="prevBtn" title="Previous Slide (Left Arrow)">◀ Prev</button>
+      <div class="slide-counter" id="slideCounter">1 / 12</div>
+      <button class="btn" id="nextBtn" title="Next Slide (Right Arrow / Space)">Next ▶</button>
+      <button class="btn" id="fullscreenBtn" title="Toggle Fullscreen (F)">⛶ Fullscreen</button>
+      <a href="Project_Presentation.pptx" download="Vynora_Project_Presentation.pptx" class="btn btn-primary" title="Download Editable PowerPoint File">
+        ⬇ Download PPTX
+      </a>
+    </div>
+  </header>
+
+  <!-- Slide Viewport -->
+  <main>
+    <div class="slide-viewport" id="viewport">
+
+      <!-- SLIDE 1: Title -->
+      <section class="slide active" data-index="1">
+        <div class="title-slide-container">
+          <img src="assets/vynora_logo.png" alt="Vynora Logo" class="title-logo">
+          <div class="title-badge">Architecture & Project Showcase</div>
+          <h1 class="main-title">VYNORA</h1>
+          <p class="main-tagline">Smart AI Life Operating System • 18 Unified Domains</p>
+          
+          <div class="chips-row">
+            <div class="chip">
+              <div class="chip-num">18 Modules</div>
+              <div class="chip-label">Finance to Farming</div>
+            </div>
+            <div class="chip">
+              <div class="chip-num">Zero Latency</div>
+              <div class="chip-label">100% In-Browser Demo</div>
+            </div>
+            <div class="chip">
+              <div class="chip-num">AES-256 Vault</div>
+              <div class="chip-label">Client Cryptography</div>
+            </div>
+            <div class="chip">
+              <div class="chip-num">43 / 43 Pass</div>
+              <div class="chip-label">Verified Test Suite</div>
+            </div>
+          </div>
+
+          <p class="author-info">
+            <strong>Project Developer:</strong> Aravindh • Full-Stack Software Engineering<br>
+            Built with React 19, TypeScript, Tailwind CSS, Vite & Firebase Cloud Firestore
+          </p>
+        </div>
+      </section>
+
+      <!-- SLIDE 2: Introduction -->
+      <section class="slide" data-index="2">
+        <div class="slide-category">System Introduction</div>
+        <h2 class="slide-title">What is Vynora?</h2>
+        <p class="slide-subtitle">A production-grade life operating system uniting daily personal, financial, and rural workflows.</p>
+        
+        <div class="slide-body">
+          <div class="grid-2">
+            <div style="display:flex; flex-direction:column; gap:12px;">
+              <div class="card accent-cyan">
+                <div class="card-title">🌟 Unified Life Operating Hub</div>
+                <div class="card-desc">Consolidates 18 distinct everyday domains—from household budgets and vehicle maintenance to agricultural crop cycles and dairy yields—into one cohesive platform.</div>
+              </div>
+              <div class="card accent-emerald">
+                <div class="card-title">⚡ Zero-Friction Recruiter Demo Mode</div>
+                <div class="card-desc">Features a self-contained in-browser transactional database. Recruiters and clients explore all features instantly without requiring signups or API keys.</div>
+              </div>
+              <div class="card accent-amber">
+                <div class="card-title">🔒 Mathematical Rigor & Privacy by Design</div>
+                <div class="card-desc">Executes verified banking reducing-balance EMI formulas, dynamic crop margin analysis, and client-side zero-knowledge AES-256 cryptographic vault security.</div>
+              </div>
+            </div>
+
+            <div class="card" style="border: 1.5px solid var(--primary); background: var(--card);">
+              <div style="font-size:12px; font-weight:800; color:var(--primary); letter-spacing:1px; margin-bottom:12px; text-transform:uppercase;">Core Capabilities</div>
+              <div style="margin-bottom:14px;">
+                <div style="font-weight:700; color:var(--text); font-size:14px;">18 Unified Domains</div>
+                <div style="font-size:12px; color:var(--muted);">Full lifecycle management for urban and rural operations.</div>
+              </div>
+              <div style="margin-bottom:14px;">
+                <div style="font-weight:700; color:var(--text); font-size:14px;">100% In-Browser State</div>
+                <div style="font-size:12px; color:var(--muted);">Full CRUD operations persist locally with zero cloud lag.</div>
+              </div>
+              <div style="margin-bottom:14px;">
+                <div style="font-weight:700; color:var(--text); font-size:14px;">1-Click Data Reset</div>
+                <div style="font-size:12px; color:var(--muted);">Instant restore to pristine demo records anytime.</div>
+              </div>
+              <div>
+                <div style="font-weight:700; color:var(--text); font-size:14px;">Progressive Web App (PWA)</div>
+                <div style="font-size:12px; color:var(--muted);">Responsive mobile and desktop layout with offline cache.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <span>Vynora — Smart AI Life Operating System</span>
+          <span>Slide 2 / 12</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 3: Problem Statement -->
+      <section class="slide" data-index="3">
+        <div class="slide-category">Industry Challenges</div>
+        <h2 class="slide-title">The Fragmented Life Problem</h2>
+        <p class="slide-subtitle">Modern users struggle with fragmented apps, disconnected records, and privacy risks.</p>
+
+        <div class="slide-body">
+          <div class="grid-4">
+            <div class="card">
+              <div style="font-size:18px; font-weight:800; color:var(--primary); margin-bottom:4px;">01</div>
+              <div class="card-title">App Fatigue & Fragmentation</div>
+              <div class="card-desc">Households juggle 8–12 distinct apps for finances, medical records, vehicle servicing, passwords, and farm notes, causing cognitive fatigue.</div>
+            </div>
+            <div class="card">
+              <div style="font-size:18px; font-weight:800; color:var(--primary); margin-bottom:4px;">02</div>
+              <div class="card-title">Zero Cross-Domain Intelligence</div>
+              <div class="card-desc">Information sits in isolated silos. When loan installments are paid or cattle produce milk revenues, standard apps cannot cross-sync ledgers.</div>
+            </div>
+            <div class="card">
+              <div style="font-size:18px; font-weight:800; color:var(--primary); margin-bottom:4px;">03</div>
+              <div class="card-title">Cloud Privacy & Credential Leakage</div>
+              <div class="card-desc">Storing passwords and health records on commercial SaaS platforms exposes users to data breaches, subscription paywalls, and unauthorized tracking.</div>
+            </div>
+            <div class="card">
+              <div style="font-size:18px; font-weight:800; color:var(--primary); margin-bottom:4px;">04</div>
+              <div class="card-title">High Barrier for Evaluation</div>
+              <div class="card-desc">Recruiters and evaluators cannot easily review complex full-stack apps when forced to create test accounts, verify emails, or set up API keys.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <span>Vynora — Smart AI Life Operating System</span>
+          <span>Slide 3 / 12</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 4: Objectives -->
+      <section class="slide" data-index="4">
+        <div class="slide-category">Target Goals</div>
+        <h2 class="slide-title">Project Objectives & Success Criteria</h2>
+        <p class="slide-subtitle">Engineered to deliver enterprise reliability, zero-friction review, and complete data safety.</p>
+
+        <div class="slide-body">
+          <div class="grid-4">
+            <div class="card accent-cyan">
+              <div style="font-size:10px; font-weight:800; color:var(--primary); letter-spacing:1px; margin-bottom:2px;">CENTRALIZATION</div>
+              <div class="card-title">Unify 18 Domains in One Hub</div>
+              <ul class="bullet-list">
+                <li>Combine urban finance and rural farming in one dashboard</li>
+                <li>Coordinate household chores, vehicle logs, and family notices</li>
+                <li>Unified global search across all 18 modules (Ctrl+K)</li>
+              </ul>
+            </div>
+            <div class="card accent-emerald">
+              <div style="font-size:10px; font-weight:800; color:var(--accent); letter-spacing:1px; margin-bottom:2px;">ACCURACY & RIGOR</div>
+              <div class="card-title">Verified Computational Logic</div>
+              <ul class="bullet-list">
+                <li>Dynamic reducing-balance EMI loan amortization schedules</li>
+                <li>Real crop profit margins (yield revenues vs input costs)</li>
+                <li>Daily dairy milk yield pricing and vehicle fuel km/L tracking</li>
+              </ul>
+            </div>
+            <div class="card accent-amber">
+              <div style="font-size:10px; font-weight:800; color:var(--warning); letter-spacing:1px; margin-bottom:2px;">ZERO-KNOWLEDGE PRIVACY</div>
+              <div class="card-title">Client-Side Cryptographic Security</div>
+              <ul class="bullet-list">
+                <li>AES-GCM 256-bit encryption for sensitive vault credentials</li>
+                <li>PBKDF2 key derivation with 100,000 hash iterations</li>
+                <li>Master password never leaves the browser in any form</li>
+              </ul>
+            </div>
+            <div class="card accent-sky">
+              <div style="font-size:10px; font-weight:800; color:var(--secondary); letter-spacing:1px; margin-bottom:2px;">EVALUATION FREEDOM</div>
+              <div class="card-title">Instant Recruiter Demo Mode</div>
+              <ul class="bullet-list">
+                <li>Zero cloud credentials or Firebase setup needed to evaluate</li>
+                <li>Preloaded realistic records under persona Alex Morgan</li>
+                <li>Full CRUD capability with 1-click restore to pristine demo state</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <span>Vynora — Smart AI Life Operating System</span>
+          <span>Slide 4 / 12</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 5: Architecture -->
+      <section class="slide" data-index="5">
+        <div class="slide-category">System Architecture</div>
+        <h2 class="slide-title">The Vynora Architecture & Service Layer</h2>
+        <p class="slide-subtitle">A decoupled architecture featuring a transparent proxy pattern for dual-mode operation.</p>
+
+        <div class="slide-body" style="gap:14px; display:flex; flex-direction:column;">
+          <div class="card accent-cyan">
+            <div style="font-size:11px; font-weight:800; color:var(--primary); margin-bottom:4px;">TIER 1: PRESENTATION & USER EXPERIENCE</div>
+            <div style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:4px;">React 19 + TypeScript + Tailwind CSS • Responsive UI</div>
+            <div class="card-desc">Executive Dashboard • 18 Module Views • Global Search Modal (Ctrl+K) • Recharts Health Analytics • Responsive Desktop & Mobile PWA Navigation</div>
+          </div>
+
+          <div class="card accent-sky">
+            <div style="font-size:11px; font-weight:800; color:var(--secondary); margin-bottom:4px;">TIER 2: TRANSPARENT SERVICE PROXY LAYER</div>
+            <div style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:4px;">CreateServiceProxy Dynamic Dispatcher</div>
+            <div class="card-desc">Intercepts 100% of module service calls transparently without code duplication. Automatically delegates to DemoServiceAdapter (Demo Mode) or Firestore Cloud Services (Production Mode).</div>
+          </div>
+
+          <div class="card accent-emerald">
+            <div style="font-size:11px; font-weight:800; color:var(--accent); margin-bottom:4px;">TIER 3: DATA PERSISTENCE & CRYPTO ENGINES</div>
+            <div style="font-size:14px; font-weight:700; color:var(--text); margin-bottom:4px;">Isolated Dual Data Stores • Zero Cloud Leaks • Full Offline Resilience</div>
+            <div class="card-desc">DemoStorage Local Engine (in-browser localStorage CRUD & atomic reset) | Firebase Cloud Firestore | Web Crypto API (PBKDF2 & AES-GCM 256-bit encryption).</div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <span>Vynora — Smart AI Life Operating System</span>
+          <span>Slide 5 / 12</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 6: 18 Modules -->
+      <section class="slide" data-index="6">
+        <div class="slide-category">Product Capabilities</div>
+        <h2 class="slide-title">Comprehensive 18-Module Ecosystem</h2>
+        <p class="slide-subtitle">Four organized operational clusters serving personal, enterprise, and rural needs.</p>
+
+        <div class="slide-body">
+          <div class="grid-4">
+            <div class="card">
+              <div style="font-size:10px; font-weight:800; color:var(--primary); letter-spacing:1px; margin-bottom:2px;">MONEY & BANKING</div>
+              <div class="card-title">Finance & Liabilities</div>
+              <ul class="bullet-list">
+                <li><strong>Finance Tracker:</strong> Multi-account ledger & budgets</li>
+                <li><strong>Loan Manager:</strong> Reducing-balance EMI & amortization</li>
+                <li><strong>Bill Reminder:</strong> Boundary overdue & finance sync</li>
+                <li><strong>Global Reports:</strong> Master net worth & CSV exports</li>
+              </ul>
+            </div>
+            <div class="card">
+              <div style="font-size:10px; font-weight:800; color:var(--accent); letter-spacing:1px; margin-bottom:2px;">FARMING & DAIRY</div>
+              <div class="card-title">Rural Operations Hub</div>
+              <ul class="bullet-list">
+                <li><strong>Agriculture Manager:</strong> Land parcels, crop cycles & ROI</li>
+                <li><strong>Dairy Management:</strong> Herd registry & milk yield logs</li>
+                <li><strong>Vehicle Manager:</strong> Fleet odometer & fuel efficiency</li>
+                <li><strong>Home Inventory:</strong> Room assets & warranties</li>
+              </ul>
+            </div>
+            <div class="card">
+              <div style="font-size:10px; font-weight:800; color:var(--warning); letter-spacing:1px; margin-bottom:2px;">ZERO-KNOWLEDGE</div>
+              <div class="card-title">Security & Privacy Locker</div>
+              <ul class="bullet-list">
+                <li><strong>Password Vault:</strong> AES-GCM 256-bit client encryption</li>
+                <li><strong>Digital Locker:</strong> Encrypted property, education docs</li>
+                <li><strong>Emergency Center:</strong> 1-tap hotlines & medical notes</li>
+                <li><strong>Settings & Audit:</strong> Session controls & data reset</li>
+              </ul>
+            </div>
+            <div class="card">
+              <div style="font-size:10px; font-weight:800; color:var(--secondary); letter-spacing:1px; margin-bottom:2px;">LIFESTYLE & HEALTH</div>
+              <div class="card-title">Personal & Family Logistics</div>
+              <ul class="bullet-list">
+                <li><strong>Health Records:</strong> BP trends, blood glucose & BMI</li>
+                <li><strong>Medicine Reminder:</strong> Slot-based dosing & pill stock</li>
+                <li><strong>Family Dashboard:</strong> Household chores & notice board</li>
+                <li><strong>Tasks Planner & AI Assistant:</strong> Context insights</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <span>Vynora — Smart AI Life Operating System</span>
+          <span>Slide 6 / 12</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 7: Technology Stack -->
+      <section class="slide" data-index="7">
+        <div class="slide-category">Technology & Engineering</div>
+        <h2 class="slide-title">Modern, High-Performance Tech Stack</h2>
+        <p class="slide-subtitle">Selected for type safety, zero runtime vulnerabilities, and instant web delivery.</p>
+
+        <div class="slide-body">
+          <div class="grid-4">
+            <div class="card accent-cyan">
+              <div style="font-size:10px; font-weight:800; color:var(--primary); letter-spacing:1px; margin-bottom:2px;">FRONTEND FRAMEWORK</div>
+              <div class="card-title">React 19 • TypeScript • Vite</div>
+              <div class="card-desc">React 19 concurrent features, strict TypeScript typing across all 18 module contracts, and blazing fast Vite build pipeline (4.2s production build).</div>
+            </div>
+            <div class="card accent-sky">
+              <div style="font-size:10px; font-weight:800; color:var(--secondary); letter-spacing:1px; margin-bottom:2px;">DATA VISUALIZATION & UI</div>
+              <div class="card-title">Tailwind • Recharts • Lucide</div>
+              <div class="card-desc">Utility-first ergonomic styling, dynamic interactive SVG charts for vitals and budgets, spring motion transitions, and clean iconography.</div>
+            </div>
+            <div class="card accent-emerald">
+              <div style="font-size:10px; font-weight:800; color:var(--accent); letter-spacing:1px; margin-bottom:2px;">STATE & PERSISTENCE</div>
+              <div class="card-title">Zustand • LocalStorage • TTL Cache</div>
+              <div class="card-desc">Central context engine with TTL-based query caching, coupled with DemoStorage transactional in-browser database engine.</div>
+            </div>
+            <div class="card accent-amber">
+              <div style="font-size:10px; font-weight:800; color:var(--warning); letter-spacing:1px; margin-bottom:2px;">DEVOPS & QA</div>
+              <div class="card-title">Render CDN • Jiti Tests • Web Crypto</div>
+              <div class="card-desc">1-click Static Site deployment with SPA rewrites, client-side AES-GCM 256 encryption, and 43 automated verification unit tests.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <span>Vynora — Smart AI Life Operating System</span>
+          <span>Slide 7 / 12</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 8: How It Works -->
+      <section class="slide" data-index="8">
+        <div class="slide-category">User Flow & Logic</div>
+        <h2 class="slide-title">How Vynora Works — End-to-End Pipeline</h2>
+        <p class="slide-subtitle">A seamless 4-stage pipeline from instant launch to verified mathematical output.</p>
+
+        <div class="slide-body">
+          <div class="pipeline">
+            <div class="step-card">
+              <div class="step-tag" style="background:rgba(2,132,199,0.1); color:var(--primary); border:1px solid rgba(2,132,199,0.3);">STEP 1</div>
+              <div class="step-title">Instant Launch & Persona Seeding</div>
+              <div class="step-desc">Recruiters click "Enter Demo" or load the app. Pre-seeded Alex Morgan profile initializes without passwords or registration barriers.</div>
+            </div>
+            <div class="step-card">
+              <div class="step-tag" style="background:rgba(14,165,233,0.1); color:var(--secondary); border:1px solid rgba(14,165,233,0.3);">STEP 2</div>
+              <div class="step-title">Proxy Interception & Indexing</div>
+              <div class="step-desc">The ServiceProxy routes all data requests to DemoStorage. Global search indexes pre-warm across all 18 modules for instant Ctrl+K discovery.</div>
+            </div>
+            <div class="step-card">
+              <div class="step-tag" style="background:rgba(5,150,105,0.1); color:var(--accent); border:1px solid rgba(5,150,105,0.3);">STEP 3</div>
+              <div class="step-title">Mathematical Calculations</div>
+              <div class="step-desc">Banking reducing-balance EMI schedules, crop margins, and dairy milk revenues calculate dynamically with real-time reactivity.</div>
+            </div>
+            <div class="step-card">
+              <div class="step-tag" style="background:rgba(217,119,6,0.1); color:var(--warning); border:1px solid rgba(217,119,6,0.3);">STEP 4</div>
+              <div class="step-title">Reactive UI & 1-Click Reset</div>
+              <div class="step-desc">Users modify or add demonstration records. All changes persist across browser refreshes, with a 1-click restore to default sample data.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <span>Vynora — Smart AI Life Operating System</span>
+          <span>Slide 8 / 12</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 9: Screenshots Dashboard & Finance -->
+      <section class="slide" data-index="9">
+        <div class="slide-category">Live Interface Demonstration</div>
+        <h2 class="slide-title">Executive Dashboard & Finance Tracker</h2>
+        <p class="slide-subtitle">Actual application interfaces captured from the live Vynora build.</p>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="screenshot-card">
+              <img src="assets/screen_dashboard.png" alt="Dashboard Screenshot" class="screenshot-img">
+              <div class="screenshot-meta">
+                <div class="screenshot-title">Executive Dashboard Overview</div>
+                <div class="screenshot-desc">Centralized command center aggregating net savings, active farm parcels, today's dairy milk yield, upcoming bill alerts, and household chores.</div>
+              </div>
+            </div>
+            <div class="screenshot-card">
+              <img src="assets/screen_finance.png" alt="Finance Screenshot" class="screenshot-img">
+              <div class="screenshot-meta">
+                <div class="screenshot-title">Multi-Account Finance & Budgeting</div>
+                <div class="screenshot-desc">Real-time balances across Bank, Savings, Agri, and Cash wallets with category progress bars, income/expense breakdown, and CSV data export.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <span>Vynora — Smart AI Life Operating System</span>
+          <span>Slide 9 / 12</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 10: Screenshots Dairy & Vault -->
+      <section class="slide" data-index="10">
+        <div class="slide-category">Live Interface Demonstration</div>
+        <h2 class="slide-title">Rural Dairy Management & Password Vault</h2>
+        <p class="slide-subtitle">Demonstrating versatility across rural enterprise tracking and military-grade security.</p>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="screenshot-card">
+              <img src="assets/screen_dairy.png" alt="Dairy Screenshot" class="screenshot-img">
+              <div class="screenshot-meta">
+                <div class="screenshot-title">Dairy Herd & Milk Production Registry</div>
+                <div class="screenshot-desc">Tracks cattle pedigree (Holstein, Gir), daily morning/evening milk yields, automatic revenue calculation, feed inventories, and veterinary vaccination records.</div>
+              </div>
+            </div>
+            <div class="screenshot-card">
+              <img src="assets/screen_vault.png" alt="Password Vault Screenshot" class="screenshot-img">
+              <div class="screenshot-meta">
+                <div class="screenshot-title">Zero-Knowledge Password Vault</div>
+                <div class="screenshot-desc">Client-side AES-GCM 256-bit encryption with PBKDF2 100k iteration key derivation, cryptographic password generator, and auto-lock security timer.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <span>Vynora — Smart AI Life Operating System</span>
+          <span>Slide 10 / 12</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 11: Benefits & Impact -->
+      <section class="slide" data-index="11">
+        <div class="slide-category">Value Proposition</div>
+        <h2 class="slide-title">Key Benefits & Real-World Impact</h2>
+        <p class="slide-subtitle">Delivering measurable time savings, complete privacy, and dual-demographic utility.</p>
+
+        <div class="slide-body">
+          <div class="grid-4">
+            <div class="card accent-cyan">
+              <div class="card-title">⏱️ Eliminates 10+ Disconnected Apps</div>
+              <div class="card-desc">Saves hours each week by consolidating finances, health vitals, vehicles, chores, and agriculture into one unified, responsive workspace.</div>
+            </div>
+            <div class="card accent-emerald">
+              <div class="card-title">🛡️ Zero Cloud Privacy Exposure</div>
+              <div class="card-desc">Sensitive passwords and personal records stay locked inside the client browser. No corporate telemetry, no data monetization, and no external tracking.</div>
+            </div>
+            <div class="card accent-amber">
+              <div class="card-title">🚜 Bridges Urban & Rural Needs</div>
+              <div class="card-desc">Uniquely designed for both tech professionals and agricultural business owners with specialized crop ROI and cattle management modules.</div>
+            </div>
+            <div class="card accent-sky">
+              <div class="card-title">💼 Instant Portfolio & Recruiter Value</div>
+              <div class="card-desc">Demonstrates software engineering excellence: clean proxy abstraction, TypeScript type safety, automated testing, and 1-click cloud deployment.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <span>Vynora — Smart AI Life Operating System</span>
+          <span>Slide 11 / 12</span>
+        </div>
+      </section>
+
+      <!-- SLIDE 12: Roadmap & Conclusion -->
+      <section class="slide" data-index="12">
+        <div class="slide-category">Roadmap & Wrap-Up</div>
+        <h2 class="slide-title">Future Enhancements & Conclusion</h2>
+        <p class="slide-subtitle">Expanding Vynora into a multi-device, offline-synchronized intelligent ecosystem.</p>
+
+        <div class="slide-body">
+          <div class="grid-2">
+            <div class="card">
+              <div style="font-size:11px; font-weight:800; color:var(--primary); letter-spacing:1px; margin-bottom:10px;">FUTURE DEVELOPMENT ROADMAP</div>
+              <div style="margin-bottom:12px;">
+                <div style="font-weight:700; color:var(--text); font-size:13.5px;">▸ Native Mobile Apps (iOS & Android)</div>
+                <div style="font-size:12px; color:var(--muted);">React Native & Capacitor wrapping for offline background push notifications.</div>
+              </div>
+              <div style="margin-bottom:12px;">
+                <div style="font-weight:700; color:var(--text); font-size:13.5px;">▸ Peer-to-Peer CRDT Data Sync</div>
+                <div style="font-size:12px; color:var(--muted);">Multi-device synchronization without centralized database dependencies.</div>
+              </div>
+              <div style="margin-bottom:12px;">
+                <div style="font-weight:700; color:var(--text); font-size:13.5px;">▸ Vernacular Multi-Language Audio</div>
+                <div style="font-size:12px; color:var(--muted);">Regional voice copilot designed specifically for rural agricultural producers.</div>
+              </div>
+              <div>
+                <div style="font-weight:700; color:var(--text); font-size:13.5px;">▸ Automated IoT Sensor Telemetry</div>
+                <div style="font-size:12px; color:var(--muted);">Direct Bluetooth integration with dairy milk meters and soil sensors.</div>
+              </div>
+            </div>
+
+            <div class="card" style="border:1.5px solid var(--primary); background:var(--card); display:flex; flex-direction:column; justify-content:center;">
+              <div style="font-size:11px; font-weight:800; color:var(--secondary); letter-spacing:1px; margin-bottom:8px;">SUMMARY & CONCLUSION</div>
+              <p style="font-size:13px; color:var(--text); line-height:1.6; font-style:italic; margin-bottom:16px;">
+                "Vynora proves that high-performance web engineering can solve real-world life fragmentation simply, securely, and elegantly."
+              </p>
+              <div style="font-size:12px; color:var(--muted); line-height:1.6; margin-bottom:16px; border-top:1px solid var(--border); padding-top:12px;">
+                <strong style="color:var(--primary);">Live Demo & Repository:</strong><br>
+                • GitHub: <a href="https://github.com/Aravindh2727/Vynora-demo" target="_blank" style="color:var(--secondary); text-decoration:none;">github.com/Aravindh2727/Vynora-demo</a><br>
+                • Deployment: Render Static Site (1-Click CDN)<br>
+                • Architecture: React 19 + TypeScript + Vite
+              </div>
+              <div style="text-align:center; font-size:13px; font-weight:800; color:var(--accent); letter-spacing:0.5px;">
+                THANK YOU — QUESTIONS & DISCUSSION
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="slide-footer">
+          <span>Vynora — Smart AI Life Operating System</span>
+          <span>Slide 12 / 12</span>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Bottom Dot Indicators -->
+  <div class="indicator-bar" id="indicatorBar"></div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const slideCounter = document.getElementById('slideCounter');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const themeBtn = document.getElementById('themeBtn');
+    const viewport = document.getElementById('viewport');
+    const indicatorBar = document.getElementById('indicatorBar');
+
+    let currentSlide = 1;
+    const totalSlides = slides.length;
+
+    // Theme Management: Defaults to Light Theme
+    let isDark = localStorage.getItem('pres_theme') === 'dark';
+    function applyTheme() {
+      if (isDark) {
+        document.body.classList.add('dark');
+        themeBtn.textContent = '🌙 Dark Theme';
+      } else {
+        document.body.classList.remove('dark');
+        themeBtn.textContent = '☀️ Light Theme';
+      }
+    }
+    themeBtn.addEventListener('click', () => {
+      isDark = !isDark;
+      localStorage.setItem('pres_theme', isDark ? 'dark' : 'light');
+      applyTheme();
+    });
+    applyTheme();
+
+    // Build indicator dots
+    slides.forEach((_, i) => {
+      const dot = document.createElement('div');
+      dot.classList.add('dot');
+      if (i === 0) dot.classList.add('active');
+      dot.addEventListener('click', () => goToSlide(i + 1));
+      indicatorBar.appendChild(dot);
+    });
+
+    const dots = document.querySelectorAll('.dot');
+
+    function updateSlide() {
+      slides.forEach((s) => s.classList.remove('active'));
+      dots.forEach((d) => d.classList.remove('active'));
+
+      const activeSlide = document.querySelector(`.slide[data-index="${currentSlide}"]`);
+      if (activeSlide) activeSlide.classList.add('active');
+      if (dots[currentSlide - 1]) dots[currentSlide - 1].classList.add('active');
+
+      slideCounter.textContent = `${currentSlide} / ${totalSlides}`;
+      prevBtn.disabled = currentSlide === 1;
+      nextBtn.disabled = currentSlide === totalSlides;
+    }
+
+    function goToSlide(n) {
+      if (n >= 1 && n <= totalSlides) {
+        currentSlide = n;
+        updateSlide();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    prevBtn.addEventListener('click', prevSlide);
+    nextBtn.addEventListener('click', nextSlide);
+
+    // Keyboard Navigation
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        goToSlide(1);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        goToSlide(totalSlides);
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
+      }
+    });
+
+    // Fullscreen Mode
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.error(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+    updateSlide();
+  </script>
+</body>
+</html>
